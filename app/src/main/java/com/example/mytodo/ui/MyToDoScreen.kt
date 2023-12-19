@@ -1,21 +1,17 @@
 package com.example.mytodo.ui
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mytodo.data.ICONS
 import com.example.mytodo.ui.screen.ListScreen
 import com.example.mytodo.ui.screen.TaskScreen
-import com.example.mytodo.ui.theme.MyToDoTheme
 import com.example.mytodo.ui.viewmodels.AppViewModelProvider
 import com.example.mytodo.ui.viewmodels.MainViewModel
 
@@ -44,18 +40,15 @@ fun MyToDoScreen(
                 onAddNewListButtonClicked = { mainViewModel.addNewListDialogVisablity() },
                 showDialogAddNewList = listUiState.showDialogAddNewList,
                 onListItemClicked = { list ->
-                    mainViewModel.applyListDetails(
-                        listName = list.listName,
-                        listIcon = list.icon,
-                        numberOfTask = list.numberOfTasks,
-                        colorTheme = list.colorTheme
-                    )
+                    mainViewModel.applyTaskScreenDetails(list)
                     navController.navigate(MyScreens.Tasks.name)
                 },
                 newListName = mainViewModel.newListName,
                 newListColorTheme = mainViewModel.newListColorTheme,
-                onNewListNameChange = { mainViewModel.updateNewListName(it) },
-                onNewListColorThemeChange = { mainViewModel.updateNewListColorTheme(it) },
+                newListIcon = mainViewModel.newListIcon,
+                onNewListNameChange = { newName -> mainViewModel.updateNewListName(newName) },
+                onNewListColorThemeChange = { newColorTheme -> mainViewModel.updateNewListColorTheme(newColorTheme) },
+                onNewListIconClicked = { newIcon -> mainViewModel.updateNewListIcon(newIcon) },
                 onCreateListClicked = { mainViewModel.createNewList() },
                 onCreateListCanceled = { mainViewModel.addNewListDialogVisablity() }
             )
@@ -83,14 +76,5 @@ fun MyToDoScreen(
             )
         }
 
-    }
-}
-
-@Preview(name = "Light Mode")
-@Preview(name = " Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun MyToDoScreenPreview() {
-    MyToDoTheme {
-        MyToDoScreen()
     }
 }

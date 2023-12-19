@@ -82,7 +82,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    // For TypeConverter
+    // For TypeConverter(Gson...)...
     implementation("com.google.code.gson:gson:2.10.1")
     // To use Kotlin annotation processing tool (kapt)
     //noinspection KaptUsageInsteadOfKsp

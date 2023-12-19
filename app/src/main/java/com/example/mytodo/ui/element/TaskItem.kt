@@ -1,7 +1,6 @@
 package com.example.mytodo.ui.element
 
 import android.content.res.Configuration
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -27,13 +26,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mytodo.R
+import com.example.mytodo.data.COLORS
 import com.example.mytodo.ui.theme.MyToDoTheme
 
 @Composable
 fun TaskItem(
     title: String,
-    @ColorRes colorTheme: Int,
+    colorTheme: String,
     isFinished: Boolean,
     onIsFinishedChange: (Boolean) -> Unit,
     isImportant: Boolean,
@@ -48,7 +47,7 @@ fun TaskItem(
         border = BorderStroke(
             width = 2.dp,
             color = if (isFinished)
-                        colorResource(id = colorTheme)
+                        colorResource(id = COLORS[colorTheme]!!)
                     else
                         MaterialTheme.colorScheme.outlineVariant
         ),
@@ -62,7 +61,7 @@ fun TaskItem(
                 checked = isFinished,
                 onCheckedChange = { onIsFinishedChange(it) },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = colorResource(id = colorTheme),
+                    checkedColor = colorResource(id = COLORS[colorTheme]!!),
                     uncheckedColor = Color.LightGray
                 )
             )
@@ -85,7 +84,7 @@ fun TaskItem(
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    tint = if (isImportant) colorResource(id = colorTheme) else Color.LightGray,
+                    tint = if (isImportant) colorResource(id = COLORS[colorTheme]!!) else Color.LightGray,
                     modifier = Modifier.size(30.dp).weight(1f),
                 )
             }
@@ -100,7 +99,7 @@ fun TaskItemPreview() {
     MyToDoTheme {
         TaskItem(
             title = "Title",
-            colorTheme = R.color.primary,
+            colorTheme = "primary",
             isFinished = true,
             onIsFinishedChange = { },
             isImportant = true,

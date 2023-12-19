@@ -8,42 +8,42 @@ val LISTS = listOf(
     ListEntity(
         listName = "My Day",
         icon = "sun",
-        colorTheme = R.color.gray,
+        colorTheme = "gray",
         numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "My Day",
         icon = "sun",
-        colorTheme = R.color.teal,
+        colorTheme = "teal",
         numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Important",
         icon = "star",
-        colorTheme = R.color.maroon,
+        colorTheme = "maroon",
         numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Planned",
         icon = "calender",
-        colorTheme = R.color.green,
+        colorTheme = "green",
         numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Assigned to me",
         icon = "person",
-        colorTheme = R.color.olive,
+        colorTheme = "olive",
         numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Home",
         icon = "home",
-        colorTheme = R.color.primary,
+        colorTheme = "primary",
         numberOfTasks = 0,
         listOfTasks = null
     ),
@@ -53,45 +53,33 @@ val LISTS = listOf(
 val TASKS by lazy {
     mutableListOf(
         TaskModel(
-            "Task..1",
-            COLORS["maroon"]!!
+            "Task..1"
         ),
         TaskModel(
-            "Task..2",
-            COLORS["maroon"]!!
+            "Task..2"
         ),
         TaskModel(
-            "Task..3",
-            COLORS["maroon"]!!
+            "Task..3"
         ),
         TaskModel(
-            "Task..4",
-            COLORS["maroon"]!!
+            "Task..4"
         ),
         TaskModel(
-            "Task..5",
-            COLORS["maroon"]!!
+            "Task..5"
         ),
         TaskModel(
-            "Task..6",
-            COLORS["maroon"]!!
+            "Task..6"
         )
     )
 }
 
 val COLORS = hashMapOf(
-    "fuchsia" to R.color.fuchsia,
-    "red" to R.color.red,
-    "silver" to R.color.silver,
     "gray" to R.color.gray,
     "olive" to R.color.olive,
     "purple" to R.color.purple,
     "maroon" to R.color.maroon,
-    "aqua" to R.color.aqua,
     "teal" to R.color.teal,
     "green" to R.color.green,
-    "blue" to R.color.blue,
-    "navy" to R.color.navy,
     "primary" to R.color.primary
 )
 
@@ -101,5 +89,5 @@ val ICONS = hashMapOf(
     "home" to R.drawable.ic_home,
     "sun" to R.drawable.ic_sun,
     "calendar" to R.drawable.ic_calendar,
-    "person" to R.drawable.ic_person
+    "person" to R.drawable.ic_person,
 )

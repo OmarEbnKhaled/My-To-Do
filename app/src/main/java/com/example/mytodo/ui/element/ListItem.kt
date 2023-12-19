@@ -1,7 +1,6 @@
 package com.example.mytodo.ui.element
 
 import android.content.res.Configuration
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mytodo.R
+import com.example.mytodo.data.COLORS
 import com.example.mytodo.data.ICONS
 import com.example.mytodo.ui.theme.MyToDoTheme
 
@@ -27,7 +26,7 @@ fun ListItem(
     listIcon: String,
     listName: String,
     numberOfTask: Int,
-    @ColorRes colorTheme: Int,
+    colorTheme: String,
     onListItemClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,7 +44,7 @@ fun ListItem(
             Icon(
                 painter = painterResource(id = ICONS[listIcon]!!),
                 contentDescription = null,
-                tint = colorResource(id = colorTheme),
+                tint = colorResource(id = COLORS[colorTheme]!!),
                 modifier = Modifier.height(30.dp)
             )
             Text(
@@ -77,7 +76,7 @@ fun ListItemPreview() {
             listIcon = "list",
             listName = "Tasks",
             numberOfTask = 2,
-            colorTheme = R.color.green,
+            colorTheme = "primary",
             onListItemClicked = {}
         )
     }

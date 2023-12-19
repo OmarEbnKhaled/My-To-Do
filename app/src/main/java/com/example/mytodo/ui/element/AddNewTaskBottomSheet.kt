@@ -1,6 +1,5 @@
 package com.example.mytodo.ui.element
 
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -37,13 +36,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mytodo.R
+import com.example.mytodo.data.COLORS
 import com.example.mytodo.ui.theme.MyToDoTheme
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewTaskBottomSheet(
     newTaskName: String,
-    @ColorRes colorTheme: Int,
+    colorTheme: String,
     onNewTaskNameChange: (String) -> Unit,
     onCreateTaskClicked: () -> Unit,
     onCancel: () -> Unit,
@@ -122,7 +122,7 @@ fun AddNewTaskBottomSheet(
                     imageVector = Icons.Rounded.ExitToApp,
                     contentDescription = "Add a task button",
                     tint = if (newTaskName.isNotEmpty())
-                        colorResource(id = colorTheme)
+                        colorResource(id = COLORS[colorTheme]!!)
                     else Color.Gray,
                     modifier = Modifier
                         .fillMaxHeight()
@@ -143,9 +143,10 @@ fun AddNewTaskBottomSheetPreview() {
     MyToDoTheme {
         AddNewTaskBottomSheet(
             newTaskName = "c",
-            colorTheme = R.color.primary,
+            colorTheme = "primary",
             onNewTaskNameChange = {},
-            onCreateTaskClicked = { /*TODO*/ }) {
+            onCreateTaskClicked = {}
+        ) {
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.mytodo.ui.element
 
 import android.content.res.Configuration
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mytodo.R
+import com.example.mytodo.data.COLORS
 import com.example.mytodo.data.ICONS
 import com.example.mytodo.ui.theme.MyToDoTheme
 
@@ -34,7 +33,7 @@ import com.example.mytodo.ui.theme.MyToDoTheme
 fun TaskTopBar(
     listName: String,
     listIcon: String,
-    @ColorRes colorTheme: Int,
+    colorTheme: String,
     onBackupButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -58,7 +57,7 @@ fun TaskTopBar(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back",
-                        tint = colorResource(id = colorTheme),
+                        tint = colorResource(id = COLORS[colorTheme]!!),
                         modifier = Modifier.size(30.dp)
                     )
                 }
@@ -66,7 +65,7 @@ fun TaskTopBar(
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "Back",
-                        tint = colorResource(id = colorTheme),
+                        tint = colorResource(id = COLORS[colorTheme]!!),
                         modifier = Modifier.size(30.dp)
                     )
                 }
@@ -78,7 +77,7 @@ fun TaskTopBar(
                 Icon(
                     painter = painterResource(id = ICONS[listIcon]!!),
                     contentDescription = null,
-                    tint = colorResource(id = colorTheme),
+                    tint = colorResource(id = COLORS[colorTheme]!!),
                     modifier = Modifier.size(40.dp)
                 )
                 Text(
@@ -92,7 +91,7 @@ fun TaskTopBar(
             Spacer(modifier = Modifier
                 .fillMaxWidth(0.95f)
                 .height(1.dp)
-                .background(colorResource(id = colorTheme))
+                .background(colorResource(id = COLORS[colorTheme]!!))
             )
         }
     }
@@ -109,7 +108,7 @@ fun TaskTopBarPreview() {
         TaskTopBar(
             listName = "Home",
             listIcon = "list",
-            colorTheme = R.color.primary,
+            colorTheme = "primary",
             onBackupButtonClicked = { }
         )
     }

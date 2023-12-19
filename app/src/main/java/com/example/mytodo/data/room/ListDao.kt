@@ -23,4 +23,7 @@ interface ListDao {
     @Query("SELECT * FROM lists ORDER BY id ASC")
     fun getAllLists(): Flow<List<ListEntity>>
 
+    @Query("SELECT * FROM lists WHERE id = :id")
+    fun getListById(id: Int): ListEntity
+
 }
