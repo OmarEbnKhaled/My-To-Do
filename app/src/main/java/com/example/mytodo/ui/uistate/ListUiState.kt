@@ -4,5 +4,4 @@ import com.example.mytodo.data.room.ListEntity
 
 data class ListUiState(
     val lists: List<ListEntity> = listOf(),
-    val showDialogAddNewList: Boolean = false,
 )

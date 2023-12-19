@@ -1,5 +1,11 @@
 package com.example.mytodo.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -10,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.mytodo.models.TaskModel
 import com.example.mytodo.ui.screen.ListScreen
 import com.example.mytodo.ui.screen.TaskScreen
 import com.example.mytodo.ui.viewmodels.AppViewModelProvider
@@ -29,16 +36,36 @@ fun MyToDoScreen(
     val taskUiState by mainViewModel.taskUiState.collectAsState()
 
     NavHost(
-        navController =navController,
+        navController = navController,
         startDestination = MyScreens.Lists.name,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
         modifier = Modifier.fillMaxSize()
     ) {
 
-        composable(route = MyScreens.Lists.name) {
+        composable(
+            route = MyScreens.Lists.name,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 400,
+                        easing = LinearEasing
+                    )
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX  = { -it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 700,
+                        easing = LinearEasing
+                    )
+                )
+            }
+        ) {
             ListScreen(
                 lists = listUiState.lists,
-                onAddNewListButtonClicked = { mainViewModel.addNewListDialogVisablity() },
-                showDialogAddNewList = listUiState.showDialogAddNewList,
                 onListItemClicked = { list ->
                     mainViewModel.applyTaskScreenDetails(list)
                     navController.navigate(MyScreens.Tasks.name)
@@ -49,30 +76,44 @@ fun MyToDoScreen(
                 onNewListNameChange = { newName -> mainViewModel.updateNewListName(newName) },
                 onNewListColorThemeChange = { newColorTheme -> mainViewModel.updateNewListColorTheme(newColorTheme) },
                 onNewListIconClicked = { newIcon -> mainViewModel.updateNewListIcon(newIcon) },
-                onCreateListClicked = { mainViewModel.createNewList() },
-                onCreateListCanceled = { mainViewModel.addNewListDialogVisablity() }
+                onCreateListClicked = { mainViewModel.createNewList() }
             )
         }
 
-        composable(route = MyScreens.Tasks.name) {
+        composable(
+            route = MyScreens.Tasks.name,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 400,
+                        easing = LinearEasing
+                    )
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX  = { it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 400,
+                        easing = LinearEasing
+                    )
+                )
+            },
+        ) {
             TaskScreen(
                 tasks = taskUiState.tasks,
-                showDialogAddNewTask = taskUiState.showDialogAddNewTask,
                 listName = taskUiState.listName,
                 listIcon = taskUiState.listIcon,
                 colorTheme = taskUiState.colorTheme,
                 newTaskName = mainViewModel.newTaskName,
                 onNewTaskNameChange = { mainViewModel.updateNewTaskName(it) },
                 onBackupButtonClicked = { navController.navigateUp() },
-                onFloatingActionButtonClicked = { mainViewModel.addNewTaskDialogVisablity() },
                 onCreateTaskClicked = { mainViewModel.createNewTask() },
-                onCancel = { mainViewModel.addNewTaskDialogVisablity() },
-                onIsFinishedChange = { task, finished ->
-                    mainViewModel.changeTaskIsFinished(task, finished)
-                },
-                onIsImportantChange = { task, important ->
-                    mainViewModel.changeTaskIsImportant(task, important)
-                }
+                onIsFinishedChange = { task, finished -> mainViewModel.changeTaskIsFinished(task, finished) },
+                onIsImportantChange = { task, important -> mainViewModel.changeTaskIsImportant(task, important) },
+                onSwipeTaskToDismiss = { task -> mainViewModel.deleteTask(task) },
+                onListColorThemeChange = { newColorTheme -> mainViewModel.updateListColorTheme(newColorTheme) }
             )
         }
 

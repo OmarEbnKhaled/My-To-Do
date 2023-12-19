@@ -1,7 +1,6 @@
 package com.example.mytodo.ui.element
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,19 +38,40 @@ fun TaskItem(
     onIsImportantChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    TaskItemContent(
+        title = title,
+        colorTheme = colorTheme,
+        isFinished = isFinished,
+        onIsFinishedChange = onIsFinishedChange,
+        isImportant = isImportant,
+        onIsImportantChange = onIsImportantChange,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TaskItemContent(
+    title: String,
+    colorTheme: String,
+    isFinished: Boolean,
+    onIsFinishedChange: (Boolean) -> Unit,
+    isImportant: Boolean,
+    onIsImportantChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onIsFinishedChange(!isFinished) },
-        color = MaterialTheme.colorScheme.onSecondary,
-        border = BorderStroke(
-            width = 2.dp,
+        color = MaterialTheme.colorScheme.surface,
+        /*border = BorderStroke(
+            width = 1.dp,
             color = if (isFinished)
-                        colorResource(id = COLORS[colorTheme]!!)
-                    else
-                        MaterialTheme.colorScheme.outlineVariant
-        ),
-        shape = MaterialTheme.shapes.small
+                colorResource(id = COLORS[colorTheme]!!)
+            else
+                MaterialTheme.colorScheme.outlineVariant
+        ),*/
+        shape = MaterialTheme.shapes.extraSmall
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -85,7 +105,9 @@ fun TaskItem(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
                     tint = if (isImportant) colorResource(id = COLORS[colorTheme]!!) else Color.LightGray,
-                    modifier = Modifier.size(30.dp).weight(1f),
+                    modifier = Modifier
+                        .size(30.dp)
+                        .weight(1f),
                 )
             }
         }
@@ -103,7 +125,7 @@ fun TaskItemPreview() {
             isFinished = true,
             onIsFinishedChange = { },
             isImportant = true,
-            onIsImportantChange = { }
+            onIsImportantChange = { },
         )
     }
 }

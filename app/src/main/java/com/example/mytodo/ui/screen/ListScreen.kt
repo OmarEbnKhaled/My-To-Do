@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,8 +25,6 @@ import com.example.mytodo.ui.theme.MyToDoTheme
 @Composable
 fun ListScreen(
     lists: List<ListEntity>,
-    showDialogAddNewList: Boolean,
-    onAddNewListButtonClicked: () -> Unit,
     onListItemClicked: (ListEntity) -> Unit,
     newListName: String,
     newListColorTheme: String,
@@ -35,8 +33,9 @@ fun ListScreen(
     onNewListColorThemeChange: (String) -> Unit,
     onNewListIconClicked: (String) -> Unit,
     onCreateListClicked: () -> Unit,
-    onCreateListCanceled: () -> Unit
 ) {
+    var showDialogAddNewList by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             ListTopBar(
@@ -46,7 +45,7 @@ fun ListScreen(
         },
         bottomBar = {
             ListBottomBar(
-                onAddNewListButtonClicked = onAddNewListButtonClicked
+                onAddNewListButtonClicked = { showDialogAddNewList = !showDialogAddNewList }
             )
         },
         content = { padding ->
@@ -69,8 +68,15 @@ fun ListScreen(
             onNewListNameChange = onNewListNameChange,
             onNewListColorThemeChange = onNewListColorThemeChange,
             onNewListIconClicked = onNewListIconClicked,
-            onCreateListCanceled = onCreateListCanceled,
-            onCreateListClicked = onCreateListClicked
+            onCreateListClicked = {
+                onCreateListClicked()
+                showDialogAddNewList = !showDialogAddNewList
+            },
+            onCreateListCanceled = {
+                onNewListNameChange("")
+                onNewListColorThemeChange("primary")
+                onNewListIconClicked("")
+                showDialogAddNewList = !showDialogAddNewList }
         )
     }
 }
@@ -90,7 +96,7 @@ fun LazyTasksList(
             ListItem(
                 listIcon = list.icon,
                 listName = list.listName,
-                numberOfTask = list.numberOfTasks,
+                numberOfTask = list.listOfTasks?.size ?: 0,
                 colorTheme = list.colorTheme,
                 onListItemClicked = { onListItemClicked(list) }
             )
@@ -105,8 +111,6 @@ fun ListScreenPreview() {
     MyToDoTheme {
         ListScreen(
             lists = emptyList(),
-            showDialogAddNewList = false,
-            onAddNewListButtonClicked = {},
             onListItemClicked = {},
             newListName = "",
             newListColorTheme = "primary",
@@ -115,7 +119,6 @@ fun ListScreenPreview() {
             onNewListColorThemeChange = { _ -> },
             onNewListIconClicked = {},
             onCreateListClicked = {},
-            onCreateListCanceled = {}
         )
     }
 }

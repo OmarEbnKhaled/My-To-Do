@@ -9,42 +9,36 @@ val LISTS = listOf(
         listName = "My Day",
         icon = "sun",
         colorTheme = "gray",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "My Day",
         icon = "sun",
         colorTheme = "teal",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Important",
         icon = "star",
         colorTheme = "maroon",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Planned",
         icon = "calender",
         colorTheme = "green",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Assigned to me",
         icon = "person",
         colorTheme = "olive",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
     ListEntity(
         listName = "Home",
         icon = "home",
         colorTheme = "primary",
-        numberOfTasks = 0,
         listOfTasks = null
     ),
 )

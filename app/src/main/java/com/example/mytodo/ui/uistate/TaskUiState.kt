@@ -1,10 +1,10 @@
 package com.example.mytodo.ui.uistate
 
+import androidx.compose.runtime.mutableStateListOf
 import com.example.mytodo.models.TaskModel
 
 data class TaskUiState(
-    val tasks: List<TaskModel> = listOf(),
-    val showDialogAddNewTask: Boolean = false,
+    var tasks: List<TaskModel> = mutableStateListOf(),
     val listId: Int = 0,
     val listName: String = "",
     val listIcon: String = "list",

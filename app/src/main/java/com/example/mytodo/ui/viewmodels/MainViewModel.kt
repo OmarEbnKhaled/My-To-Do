@@ -39,11 +39,6 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
     var newListIcon by mutableStateOf("")
     fun updateNewListIcon(newIcon: String) { newListIcon = newIcon }
 
-    fun addNewListDialogVisablity() {
-        _listUiState.update { it.copy(showDialogAddNewList = !it.showDialogAddNewList) }
-        resetAddNewListDialog()
-    }
-
     fun createNewList() {
         viewModelScope.launch(Dispatchers.IO) {
             listDao.insert(
@@ -54,7 +49,7 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
                     listOfTasks = null
                 )
             )
-            addNewListDialogVisablity()
+            resetAddNewListDialog()
         }
     }
 
@@ -87,29 +82,35 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
         private set
     fun updateNewTaskName(newName: String) { newTaskName = newName }
 
-    fun addNewTaskDialogVisablity() { _taskUiState.update { it.copy(showDialogAddNewTask = !it.showDialogAddNewTask) } }
-
     fun createNewTask() {
         val newTasks: MutableList<TaskModel> = taskUiState.value.tasks.toMutableList()
-        val newNumberOfTasks = taskUiState.value.numberOfTasks.inc()
-
         newTasks.add(TaskModel(newTaskName))
-
+        updateTasksInUiState(newTasks)
         viewModelScope.launch(Dispatchers.IO) {
-            listDao.update(
-                ListEntity(
-                    id = taskUiState.value.listId,
-                    listName = taskUiState.value.listName,
-                    icon = taskUiState.value.listIcon,
-                    colorTheme = taskUiState.value.colorTheme,
-                    numberOfTasks = newNumberOfTasks,
-                    listOfTasks = newTasks.toList()
-                )
+            updateListInDatabase(
+                tasks = newTasks.toList()
             )
-            updateTasksInUiState(_taskUiState.value.listId)
         }
-
         updateNewTaskName("")
+    }
+
+    fun deleteTask(task: TaskModel) {
+        val newTasks: MutableList<TaskModel> = taskUiState.value.tasks.toMutableList()
+        newTasks.remove(task)
+        updateTasksInUiState(newTasks)
+        viewModelScope.launch(Dispatchers.IO) {
+            updateListInDatabase(
+                tasks = newTasks.toList()
+            )
+        }
+    }
+
+    private fun updateTasksInUiState(newTasks: MutableList<TaskModel>) {
+        _taskUiState.update { taskUiState ->
+            taskUiState.copy(
+                tasks = newTasks.toList()
+            )
+        }
     }
 
     fun applyTaskScreenDetails(list: ListEntity) {
@@ -118,22 +119,10 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
                 listId = list.id,
                 listName = list.listName,
                 listIcon = list.icon,
-                numberOfTasks = list.numberOfTasks,
-                colorTheme = list.colorTheme
+                numberOfTasks = list.listOfTasks?.size ?: 0,
+                colorTheme = list.colorTheme,
+                tasks = list.listOfTasks ?: listOf()
             )
-        }
-        updateTasksInUiState(list.id)
-    }
-
-    private fun updateTasksInUiState(listId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val tasks = listDao.getListById(listId)
-            _taskUiState.update { taskUiState ->
-                taskUiState.copy(
-                    tasks = tasks.listOfTasks ?: listOf(),
-                    numberOfTasks = tasks.numberOfTasks
-                )
-            }
         }
     }
 
@@ -151,17 +140,33 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
 
     private fun changeTaskStatusInDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            listDao.update(
-                ListEntity(
-                    id = taskUiState.value.listId,
-                    listName = taskUiState.value.listName,
-                    icon = taskUiState.value.listIcon,
-                    colorTheme = taskUiState.value.colorTheme,
-                    numberOfTasks = taskUiState.value.numberOfTasks,
-                    listOfTasks = taskUiState.value.tasks
-                )
+            updateListInDatabase()
+        }
+    }
+
+    fun updateListColorTheme(newColor: String) {
+        _taskUiState.update { taskUiState ->
+            taskUiState.copy(
+                colorTheme = newColor
             )
         }
+        viewModelScope.launch(Dispatchers.IO) {
+            updateListInDatabase()
+        }
+    }
+
+    private suspend fun updateListInDatabase(
+        tasks: List<TaskModel> = taskUiState.value.tasks
+    ) {
+        listDao.update(
+            ListEntity(
+                id = taskUiState.value.listId,
+                listName = taskUiState.value.listName,
+                icon = taskUiState.value.listIcon,
+                colorTheme = taskUiState.value.colorTheme,
+                listOfTasks = tasks
+            )
+        )
     }
 
 }

@@ -149,7 +149,7 @@ fun AddNewListDialog(
                         }
                     }
                 }else {
-                    LazyColorPlate(onNewListColorThemeChange = onNewListColorThemeChange)
+                    LazyColorPlate(onListColorThemeChange = onNewListColorThemeChange)
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.fillMaxWidth()
@@ -209,8 +209,8 @@ fun LazyIconPlate(
 }
 
 @Composable
-private fun LazyColorPlate(
-    onNewListColorThemeChange: (String) -> Unit,
+fun LazyColorPlate(
+    onListColorThemeChange: (String) -> Unit,
     colorList: HashMap<String, Int> = COLORS
 ) {
     LazyRow(
@@ -225,7 +225,7 @@ private fun LazyColorPlate(
                 modifier = Modifier.padding(horizontal = 6.dp)
             ) {
                 Button(
-                    onClick = { onNewListColorThemeChange(color.first) },
+                    onClick = { onListColorThemeChange(color.first) },
                     colors = ButtonDefaults
                         .buttonColors(containerColor = colorResource(id = color.second)),
                     shape = CircleShape,
@@ -240,7 +240,7 @@ private fun LazyColorPlate(
 
 @Preview
 @Composable
-fun AddNewListDialogPreview() {
+private fun AddNewListDialogPreview() {
     MyToDoTheme {
         AddNewListDialog(
             newListName = "",

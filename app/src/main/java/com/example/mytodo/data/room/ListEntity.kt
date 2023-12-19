@@ -22,9 +22,6 @@ data class ListEntity(
     @ColumnInfo(name = "color_theme")
     val colorTheme: String = "primary",
 
-    @ColumnInfo(name = "number_of_task")
-    val numberOfTasks: Int = 0,
-
     @TypeConverters(StringListConverter::class)
     @ColumnInfo(name = "list_of_task")
     val listOfTasks: List<TaskModel>?

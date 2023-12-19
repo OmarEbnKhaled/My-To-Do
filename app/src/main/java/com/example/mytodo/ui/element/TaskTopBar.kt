@@ -35,6 +35,7 @@ fun TaskTopBar(
     listIcon: String,
     colorTheme: String,
     onBackupButtonClicked: () -> Unit,
+    onMenuButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -61,7 +62,7 @@ fun TaskTopBar(
                         modifier = Modifier.size(30.dp)
                     )
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onMenuButtonClicked()}) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "Back",
@@ -90,7 +91,7 @@ fun TaskTopBar(
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth(0.95f)
-                .height(1.dp)
+                .height(2.dp)
                 .background(colorResource(id = COLORS[colorTheme]!!))
             )
         }
@@ -109,7 +110,8 @@ fun TaskTopBarPreview() {
             listName = "Home",
             listIcon = "list",
             colorTheme = "primary",
-            onBackupButtonClicked = { }
+            onBackupButtonClicked = { },
+            onMenuButtonClicked = { }
         )
     }
 }
