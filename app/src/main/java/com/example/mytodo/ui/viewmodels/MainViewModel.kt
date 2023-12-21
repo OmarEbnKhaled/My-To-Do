@@ -53,6 +53,20 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
         }
     }
 
+    fun deleteList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            listDao.delete(
+                ListEntity(
+                    id = taskUiState.value.listId,
+                    listName = taskUiState.value.listName,
+                    icon = taskUiState.value.listIcon,
+                    colorTheme = taskUiState.value.colorTheme,
+                    listOfTasks = taskUiState.value.tasks,
+                )
+            )
+        }
+    }
+
     private fun updateListsInUiState() {
         viewModelScope.launch(Dispatchers.IO) {
             listDao.getAllLists().collect { lists ->
@@ -144,7 +158,7 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
         }
     }
 
-    fun updateListColorTheme(newColor: String) {
+    fun updateListColorThemeDirect(newColor: String) {
         _taskUiState.update { taskUiState ->
             taskUiState.copy(
                 colorTheme = newColor
@@ -152,6 +166,20 @@ class MainViewModel(private val listDao: ListDao) : ViewModel() {
         }
         viewModelScope.launch(Dispatchers.IO) {
             updateListInDatabase()
+        }
+    }
+
+    fun updateListProperties() {
+        _taskUiState.update { taskUiState ->
+            taskUiState.copy(
+                listName = newListName,
+                listIcon = newListIcon,
+                colorTheme = newListColorTheme,
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            updateListInDatabase()
+            resetAddNewListDialog()
         }
     }
 

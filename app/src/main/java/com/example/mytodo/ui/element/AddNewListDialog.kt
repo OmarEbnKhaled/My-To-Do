@@ -48,19 +48,21 @@ import com.example.mytodo.ui.theme.MyToDoTheme
 
 @Composable
 fun AddNewListDialog(
-    newListName: String,
-    newListColorTheme: String,
-    newListIcon: String,
-    onNewListNameChange: (String) -> Unit,
-    onNewListColorThemeChange: (String) -> Unit,
-    onNewListIconClicked: (String) -> Unit,
-    onCreateListClicked: () -> Unit,
-    onCreateListCanceled: () -> Unit,
+    listName: String,
+    listIcon: String,
+    listColorTheme: String,
+    dialogTitle: String,
+    doneButtonText: String,
+    onListNameChange: (String) -> Unit,
+    onListIconClicked: (String) -> Unit,
+    onListColorThemeChange: (String) -> Unit,
+    onDoneButtonClicked: () -> Unit,
+    onCanceledButtonClicked: () -> Unit,
 ) {
     var showIconSelection by rememberSaveable { mutableStateOf(false) }
 
     Dialog(
-        onDismissRequest = { onCreateListCanceled() },
+        onDismissRequest = { onCanceledButtonClicked() },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Card(
@@ -75,8 +77,8 @@ fun AddNewListDialog(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "New List",
-                    color = colorResource(id = COLORS[newListColorTheme]!!),
+                    text = dialogTitle,
+                    color = colorResource(id = COLORS[listColorTheme]!!),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
@@ -85,12 +87,12 @@ fun AddNewListDialog(
                 ) {
                     IconButton(onClick = { showIconSelection = !showIconSelection }) {
                         Icon(
-                            painter = if (newListIcon == "") 
+                            painter = if (listIcon == "")
                                     painterResource(id = R.drawable.ic_add_icon_list)
                                 else
-                                    painterResource(id = ICONS[newListIcon]!!),
+                                    painterResource(id = ICONS[listIcon]!!),
                             contentDescription = "Add icon list",
-                            tint = colorResource(id = COLORS[newListColorTheme]!!),
+                            tint = colorResource(id = COLORS[listColorTheme]!!),
                             modifier = Modifier
                                 .size(35.dp)
                                 .padding(end = 4.dp)
@@ -101,8 +103,8 @@ fun AddNewListDialog(
                             .clipToBounds()
                     ) {
                         TextField(
-                            value = newListName,
-                            onValueChange = { onNewListNameChange(it) },
+                            value = listName,
+                            onValueChange = { onListNameChange(it) },
                             placeholder = {
                                 Text(
                                     text = "Enter list title",
@@ -114,8 +116,8 @@ fun AddNewListDialog(
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = MaterialTheme.colorScheme.background,
                                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                                focusedIndicatorColor = colorResource(id = COLORS[newListColorTheme]!!),
-                                unfocusedIndicatorColor = colorResource(id = COLORS[newListColorTheme]!!),
+                                focusedIndicatorColor = colorResource(id = COLORS[listColorTheme]!!),
+                                unfocusedIndicatorColor = colorResource(id = COLORS[listColorTheme]!!),
                             ),
                             singleLine = true,
                             modifier = Modifier
@@ -127,7 +129,7 @@ fun AddNewListDialog(
                 if (showIconSelection) {
                     LazyIconPlate(
                         onNewListIconClicked = {
-                            onNewListIconClicked(it)
+                            onListIconClicked(it)
                             showIconSelection = !showIconSelection
                         }
                     )
@@ -138,38 +140,38 @@ fun AddNewListDialog(
                         TextButton(
                             onClick = {
                                 showIconSelection = !showIconSelection
-                                onNewListIconClicked("")
+                                onListIconClicked("")
                             }
                         ) {
                             Text(
                                 text = "Remove Emoji",
-                                color = colorResource(id = COLORS[newListColorTheme]!!),
+                                color = colorResource(id = COLORS[listColorTheme]!!),
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                     }
                 }else {
-                    LazyColorPlate(onListColorThemeChange = onNewListColorThemeChange)
+                    LazyColorPlate(onListColorThemeChange = onListColorThemeChange)
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         TextButton(
-                            onClick = { onCreateListCanceled() }
+                            onClick = { onCanceledButtonClicked() }
                         ) {
                             Text(
                                 text = "Cancel",
-                                color = colorResource(id = COLORS[newListColorTheme]!!),
+                                color = colorResource(id = COLORS[listColorTheme]!!),
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                         TextButton(
-                            onClick = { onCreateListClicked() },
-                            enabled = newListName.isNotEmpty(),
-                            colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = COLORS[newListColorTheme]!!))
+                            onClick = { onDoneButtonClicked() },
+                            enabled = listName.isNotEmpty(),
+                            colors = ButtonDefaults.textButtonColors(contentColor = colorResource(id = COLORS[listColorTheme]!!))
                         ) {
                             Text(
-                                text = "Create List",
+                                text = doneButtonText,
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
@@ -243,14 +245,16 @@ fun LazyColorPlate(
 private fun AddNewListDialogPreview() {
     MyToDoTheme {
         AddNewListDialog(
-            newListName = "",
-            newListColorTheme = "primary",
-            newListIcon = "",
-            onNewListNameChange = { _ -> },
-            onNewListColorThemeChange = { _ -> },
-            onNewListIconClicked = {},
-            onCreateListCanceled = { /*TODO*/ },
-            onCreateListClicked = {}
+            listName = "",
+            listColorTheme = "primary",
+            listIcon = "",
+            dialogTitle = "New list",
+            doneButtonText = "Done",
+            onListNameChange = { _ -> },
+            onListColorThemeChange = { _ -> },
+            onListIconClicked = {},
+            onCanceledButtonClicked = {},
+            onDoneButtonClicked = {}
         )
     }
 }

@@ -16,7 +16,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mytodo.models.TaskModel
 import com.example.mytodo.ui.screen.ListScreen
 import com.example.mytodo.ui.screen.TaskScreen
 import com.example.mytodo.ui.viewmodels.AppViewModelProvider
@@ -49,7 +48,7 @@ fun MyToDoScreen(
                 slideInHorizontally(
                     initialOffsetX = { -it }, // it == fullWidth
                     animationSpec = tween(
-                        durationMillis = 400,
+                        durationMillis = 300,
                         easing = LinearEasing
                     )
                 )
@@ -58,7 +57,7 @@ fun MyToDoScreen(
                 slideOutHorizontally(
                     targetOffsetX  = { -it }, // it == fullWidth
                     animationSpec = tween(
-                        durationMillis = 700,
+                        durationMillis = 300,
                         easing = LinearEasing
                     )
                 )
@@ -86,7 +85,7 @@ fun MyToDoScreen(
                 slideInHorizontally(
                     initialOffsetX = { it }, // it == fullWidth
                     animationSpec = tween(
-                        durationMillis = 400,
+                        durationMillis = 300,
                         easing = LinearEasing
                     )
                 )
@@ -95,7 +94,7 @@ fun MyToDoScreen(
                 slideOutHorizontally(
                     targetOffsetX  = { it }, // it == fullWidth
                     animationSpec = tween(
-                        durationMillis = 400,
+                        durationMillis = 300,
                         easing = LinearEasing
                     )
                 )
@@ -105,7 +104,7 @@ fun MyToDoScreen(
                 tasks = taskUiState.tasks,
                 listName = taskUiState.listName,
                 listIcon = taskUiState.listIcon,
-                colorTheme = taskUiState.colorTheme,
+                listColorTheme = taskUiState.colorTheme,
                 newTaskName = mainViewModel.newTaskName,
                 onNewTaskNameChange = { mainViewModel.updateNewTaskName(it) },
                 onBackupButtonClicked = { navController.navigateUp() },
@@ -113,7 +112,18 @@ fun MyToDoScreen(
                 onIsFinishedChange = { task, finished -> mainViewModel.changeTaskIsFinished(task, finished) },
                 onIsImportantChange = { task, important -> mainViewModel.changeTaskIsImportant(task, important) },
                 onSwipeTaskToDismiss = { task -> mainViewModel.deleteTask(task) },
-                onListColorThemeChange = { newColorTheme -> mainViewModel.updateListColorTheme(newColorTheme) }
+                onListColorThemeDirectChange = { newColorTheme -> mainViewModel.updateListColorThemeDirect(newColorTheme) },
+                onDeleteListClicked = {
+                    mainViewModel.deleteList()
+                    navController.navigateUp()
+                },
+                newListName = mainViewModel.newListName,
+                newListColorTheme = mainViewModel.newListColorTheme,
+                newListIcon = mainViewModel.newListIcon,
+                onListNameChange = { newName -> mainViewModel.updateNewListName(newName) },
+                onListIconChange = { newIcon -> mainViewModel.updateNewListIcon(newIcon) },
+                onListColorThemeChange = { newColorTheme -> mainViewModel.updateNewListColorTheme(newColorTheme) },
+                onSaveListClicked = { mainViewModel.updateListProperties() }
             )
         }
 

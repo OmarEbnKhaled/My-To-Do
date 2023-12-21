@@ -20,15 +20,12 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,15 +37,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mytodo.R
 import com.example.mytodo.data.COLORS
 import com.example.mytodo.data.TASKS
 import com.example.mytodo.models.TaskModel
+import com.example.mytodo.ui.element.AddNewListDialog
 import com.example.mytodo.ui.element.AddNewTaskBottomSheet
 import com.example.mytodo.ui.element.ChangeThemeBottomSheet
+import com.example.mytodo.ui.element.ListDropdownMenu
 import com.example.mytodo.ui.element.TaskItem
 import com.example.mytodo.ui.element.TaskTopBar
 import com.example.mytodo.ui.theme.MyToDoTheme
@@ -58,7 +55,7 @@ fun TaskScreen(
     tasks: List<TaskModel>,
     listName: String,
     listIcon: String,
-    colorTheme: String,
+    listColorTheme: String,
     newTaskName: String,
     onNewTaskNameChange: (String) -> Unit,
     onBackupButtonClicked: () -> Unit,
@@ -66,11 +63,20 @@ fun TaskScreen(
     onIsFinishedChange: (TaskModel, Boolean) -> Unit,
     onIsImportantChange: (TaskModel, Boolean) -> Unit,
     onSwipeTaskToDismiss: (TaskModel) -> Unit,
-    onListColorThemeChange: (String) -> Unit
+    onListColorThemeDirectChange: (String) -> Unit,
+    onDeleteListClicked: () -> Unit,
+    newListName: String,
+    newListIcon: String,
+    newListColorTheme: String,
+    onListNameChange: (String) -> Unit,
+    onListIconChange: (String) -> Unit,
+    onListColorThemeChange: (String) -> Unit,
+    onSaveListClicked: () -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showBottomSheetChangeTheme by rememberSaveable { mutableStateOf(false) }
     var showBottomSheetAddNewTask by rememberSaveable { mutableStateOf(false) }
+    var showDialogUpdateListProperties by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -78,33 +84,25 @@ fun TaskScreen(
             .wrapContentSize(Alignment.TopEnd)
             .padding(top = 50.dp)
     ){
-        DropdownMenu(
+        ListDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = !expanded },
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            DropdownMenuItem(
-                text = { Text(text = "Change theme") },
-                onClick = {
-                    showBottomSheetChangeTheme = !showBottomSheetChangeTheme
-                    expanded = !expanded
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_theme),
-                        contentDescription = null,
-                    )
-                }
-            )
-        }
+            onExpandedChange = { expanded = !expanded },
+            onRenameListClicked = {
+                onListNameChange(listName)
+                onListIconChange(listIcon)
+                onListColorThemeChange(listColorTheme)
+                showDialogUpdateListProperties = !showDialogUpdateListProperties
+            },
+            onChangeThemeClicked = { showBottomSheetChangeTheme = !showBottomSheetChangeTheme },
+            onDeleteListClicked = { onDeleteListClicked() }
+        )
     }
     Scaffold(
         topBar = {
             TaskTopBar(
                 listName = listName,
                 listIcon = listIcon,
-                colorTheme = colorTheme,
+                colorTheme = listColorTheme,
                 onBackupButtonClicked = { onBackupButtonClicked() },
                 onMenuButtonClicked = { expanded = !expanded }
             )
@@ -117,7 +115,7 @@ fun TaskScreen(
             ) {
                 FloatingActionButton(
                     onClick = { showBottomSheetAddNewTask = !showBottomSheetAddNewTask },
-                    containerColor = colorResource(id = COLORS[colorTheme]!!)
+                    containerColor = colorResource(id = COLORS[listColorTheme]!!)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -131,7 +129,7 @@ fun TaskScreen(
         content = { padding ->
             LazyTasks(
                 tasks = tasks,
-                colorTheme = colorTheme,
+                colorTheme = listColorTheme,
                 onIsFinishedChange = { task, finished -> onIsFinishedChange(task, finished) },
                 onIsImportantChange = { task, important -> onIsImportantChange(task, important) },
                 onSwipeTaskToDismiss = { task -> onSwipeTaskToDismiss(task) },
@@ -143,7 +141,7 @@ fun TaskScreen(
     if (showBottomSheetAddNewTask) {
         AddNewTaskBottomSheet(
             newTaskName = newTaskName,
-            colorTheme = colorTheme,
+            colorTheme = listColorTheme,
             onNewTaskNameChange = { onNewTaskNameChange(it) },
             onCreateTaskClicked = { onCreateTaskClicked() },
             onCancel = { showBottomSheetAddNewTask = !showBottomSheetAddNewTask }
@@ -152,8 +150,31 @@ fun TaskScreen(
 
     if (showBottomSheetChangeTheme) {
         ChangeThemeBottomSheet(
-            onListColorThemeChange = { onListColorThemeChange(it) },
+            onListColorThemeChange = { onListColorThemeDirectChange(it) },
             onDismiss = { showBottomSheetChangeTheme = !showBottomSheetChangeTheme }
+        )
+    }
+
+    if (showDialogUpdateListProperties) {
+        AddNewListDialog(
+            listName = newListName,
+            listIcon = newListIcon,
+            listColorTheme = newListColorTheme,
+            dialogTitle = "Rename list",
+            doneButtonText = "Save",
+            onListNameChange = onListNameChange,
+            onListIconClicked = onListIconChange,
+            onListColorThemeChange = onListColorThemeChange,
+            onDoneButtonClicked = {
+                onSaveListClicked()
+                showDialogUpdateListProperties = !showDialogUpdateListProperties
+            },
+            onCanceledButtonClicked = {
+                onListNameChange("")
+                onListColorThemeChange("primary")
+                onListIconChange("")
+                showDialogUpdateListProperties = !showDialogUpdateListProperties
+            }
         )
     }
 
@@ -205,7 +226,9 @@ private fun LazyTasks(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete",
                             tint = Color.Red,
-                            modifier = Modifier.align(Alignment.CenterStart).size(35.dp)
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .size(35.dp)
                         )
                     }
                 },
@@ -242,7 +265,7 @@ private fun TaskScreenPreview() {
             tasks = TASKS,
             listName = "Home",
             listIcon = "list",
-            colorTheme = "primary",
+            listColorTheme = "primary",
             newTaskName = "",
             onNewTaskNameChange = {},
             onBackupButtonClicked = {},
@@ -250,7 +273,15 @@ private fun TaskScreenPreview() {
             onIsFinishedChange = { _, _ -> },
             onIsImportantChange = { _, _ -> },
             onSwipeTaskToDismiss = { _ -> },
-            onListColorThemeChange = { _ -> }
+            onListColorThemeDirectChange = { _ -> },
+            onDeleteListClicked = {},
+            newListName = "",
+            newListColorTheme = "",
+            newListIcon = "",
+            onListNameChange = {},
+            onListIconChange = {},
+            onListColorThemeChange = {},
+            onSaveListClicked = {},
         )
     }
 }

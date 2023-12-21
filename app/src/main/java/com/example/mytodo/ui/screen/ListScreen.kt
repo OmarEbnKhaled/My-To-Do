@@ -62,21 +62,24 @@ fun ListScreen(
 
     if (showDialogAddNewList) {
         AddNewListDialog(
-            newListName = newListName,
-            newListColorTheme = newListColorTheme,
-            newListIcon = newListIcon,
-            onNewListNameChange = onNewListNameChange,
-            onNewListColorThemeChange = onNewListColorThemeChange,
-            onNewListIconClicked = onNewListIconClicked,
-            onCreateListClicked = {
+            listName = newListName,
+            listColorTheme = newListColorTheme,
+            listIcon = newListIcon,
+            dialogTitle = "New list",
+            doneButtonText = "Create",
+            onListNameChange = onNewListNameChange,
+            onListColorThemeChange = onNewListColorThemeChange,
+            onListIconClicked = onNewListIconClicked,
+            onDoneButtonClicked = {
                 onCreateListClicked()
                 showDialogAddNewList = !showDialogAddNewList
             },
-            onCreateListCanceled = {
+            onCanceledButtonClicked = {
                 onNewListNameChange("")
                 onNewListColorThemeChange("primary")
                 onNewListIconClicked("")
-                showDialogAddNewList = !showDialogAddNewList }
+                showDialogAddNewList = !showDialogAddNewList
+            }
         )
     }
 }
