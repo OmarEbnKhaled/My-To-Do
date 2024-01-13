@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mytodo.ui.MyToDoScreen
 import com.example.mytodo.ui.theme.MyToDoTheme
-import com.example.mytodo.ui.viewmodels.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

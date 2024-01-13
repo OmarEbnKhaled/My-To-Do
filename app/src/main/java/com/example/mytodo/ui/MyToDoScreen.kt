@@ -16,14 +16,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.mytodo.ui.screen.AccountScreen
 import com.example.mytodo.ui.screen.ListScreen
 import com.example.mytodo.ui.screen.TaskScreen
-import com.example.mytodo.ui.viewmodels.AppViewModelProvider
-import com.example.mytodo.ui.viewmodels.MainViewModel
+import com.example.mytodo.viewmodels.AppViewModelProvider
+import com.example.mytodo.viewmodels.MainViewModel
 
 enum class MyScreens {
     Lists,
-    Tasks
+    Tasks,
+    Account
 }
 
 @Composable
@@ -75,7 +77,8 @@ fun MyToDoScreen(
                 onNewListNameChange = { newName -> mainViewModel.updateNewListName(newName) },
                 onNewListColorThemeChange = { newColorTheme -> mainViewModel.updateNewListColorTheme(newColorTheme) },
                 onNewListIconClicked = { newIcon -> mainViewModel.updateNewListIcon(newIcon) },
-                onCreateListClicked = { mainViewModel.createNewList() }
+                onCreateListClicked = { mainViewModel.createNewList() },
+                onAccountClicked = { navController.navigate(MyScreens.Account.name) }
             )
         }
 
@@ -124,6 +127,34 @@ fun MyToDoScreen(
                 onListIconChange = { newIcon -> mainViewModel.updateNewListIcon(newIcon) },
                 onListColorThemeChange = { newColorTheme -> mainViewModel.updateNewListColorTheme(newColorTheme) },
                 onSaveListClicked = { mainViewModel.updateListProperties() }
+            )
+        }
+
+        composable(
+            route = MyScreens.Account.name,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearEasing
+                    )
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX  = { it }, // it == fullWidth
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearEasing
+                    )
+                )
+            },
+        ) {
+            AccountScreen(
+                name = "Omar Khaled",
+                email = "omarabdelaal2013@gmail.com",
+                onCancelClicked = { navController.navigateUp() }
             )
         }
 

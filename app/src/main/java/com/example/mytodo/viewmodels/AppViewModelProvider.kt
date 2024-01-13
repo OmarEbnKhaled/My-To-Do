@@ -1,4 +1,4 @@
-package com.example.mytodo.ui.viewmodels
+package com.example.mytodo.viewmodels
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras

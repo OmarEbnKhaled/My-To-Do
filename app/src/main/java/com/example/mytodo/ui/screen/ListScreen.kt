@@ -33,6 +33,7 @@ fun ListScreen(
     onNewListColorThemeChange: (String) -> Unit,
     onNewListIconClicked: (String) -> Unit,
     onCreateListClicked: () -> Unit,
+    onAccountClicked: () -> Unit
 ) {
     var showDialogAddNewList by rememberSaveable { mutableStateOf(false) }
 
@@ -40,7 +41,8 @@ fun ListScreen(
         topBar = {
             ListTopBar(
                 name = "Omar Khaled",
-                email = "omarabdelaal2013@gmail.com"
+                email = "omarabdelaal2013@gmail.com",
+                onAccountClicked = onAccountClicked
             )
         },
         bottomBar = {
@@ -122,6 +124,7 @@ fun ListScreenPreview() {
             onNewListColorThemeChange = { _ -> },
             onNewListIconClicked = {},
             onCreateListClicked = {},
+            onAccountClicked = {}
         )
     }
 }

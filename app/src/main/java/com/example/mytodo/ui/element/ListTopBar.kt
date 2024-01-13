@@ -1,6 +1,7 @@
 package com.example.mytodo.ui.element
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import com.example.mytodo.ui.theme.MyToDoTheme
 fun ListTopBar(
     name: String,
     email: String,
+    onAccountClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -34,36 +36,45 @@ fun ListTopBar(
         color = MaterialTheme.colorScheme.background
     ) {
         Row(
-            modifier = Modifier.height(50.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .height(50.dp)
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(50.dp)
+                    .clickable { onAccountClicked() }
+                    .weight(1f)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(35.dp),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(start = 4.dp),
                 )
-            }
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            ) {
-                Row {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                ) {
+                    Row {
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Icon(
+                            imageVector = Icons.Rounded.KeyboardArrowDown,
+                            contentDescription = null
+                        )
+                    }
                     Text(
-                        text = name,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Icon(
-                        imageVector = Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = null
+                        text = email,
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
-                Text(
-                    text = email,
-                    style = MaterialTheme.typography.bodySmall
-                )
             }
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
@@ -87,7 +98,8 @@ fun ListTopBarPreview() {
     MyToDoTheme {
         ListTopBar(
             name = "Omar Khaled",
-            email = "omarabdelaal2013@gmail.com"
+            email = "omarabdelaal2013@gmail.com",
+            onAccountClicked = {}
         )
     }
 }
